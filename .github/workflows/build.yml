@@ -1,0 +1,36 @@
+name: Build and test Windows
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+      - name: Install FFmpeg for tests only
+        shell: pwsh
+        run: |
+          choco install ffmpeg --yes --no-progress
+          if ($LASTEXITCODE -ne 0) { throw 'FFmpeg installation failed' }
+      - name: Build, test and package
+        shell: pwsh
+        run: ./scripts/package.ps1 -RunTests
+      - name: Upload application and checksum
+        uses: actions/upload-artifact@v4
+        with:
+          name: CompactadorFilmes-win-x64
+          path: |
+            artifacts/*.zip
+            artifacts/*.sha256
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: artifacts/build-*/testes/relatorio.json

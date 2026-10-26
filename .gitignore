@@ -1,0 +1,20 @@
+# Generated binaries and media never belong in source control.
+**/bin/
+**/obj/
+Programa/
+artifacts/
+validacao*/
+*.lnk
+*.user
+*.suo
+.vs/
+*.log
+*.partial
+*.attempt
+*.mp4
+*.mkv
+*.avi
+*.mov
+*.exe
+*.dll
+*.zip
